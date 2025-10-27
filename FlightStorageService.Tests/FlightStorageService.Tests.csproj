@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FlightStorageService\FlightStorageService\FlightStorageService.csproj" />
+    <ProjectReference Include="..\FlightStorageService\FlightStorageService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
