@@ -1,8 +1,9 @@
 ﻿namespace FlightStorageService.Tests
 {
-    using Xunit;
     using FlightStorageService.Repository;
+    using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Configuration;
+    using Xunit;
 
     public class FlightRepositoryTests
     {
@@ -14,13 +15,15 @@
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            _repository = new FlightRepository(configuration);
+            var memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+            _repository = new FlightRepository(configuration, memoryCache);
         }
 
         [Fact]
         public async Task GetByNumberAsync_ReturnsFlight_WhenExists()
         {
-            string flightNumber = "PS101";
+            string flightNumber = "PS510";
 
             var flight = await _repository.GetByNumberAsync(flightNumber);
 

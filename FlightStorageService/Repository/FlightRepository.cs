@@ -1,19 +1,58 @@
 ﻿namespace FlightStorageService.Repository
 {
-    using FlightStorageService.Models;
-    using System.Data;
-    using Microsoft.Data.SqlClient;
     using FlightStorageService.Helpers;
+    using FlightStorageService.Models;
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Caching.Memory;
+    using System.Data;
 
     public class FlightRepository
     {
         private readonly string _connectionString;
+        private readonly IMemoryCache _cache;
 
-        public FlightRepository(IConfiguration configuration)
+        public FlightRepository(IConfiguration configuration, IMemoryCache cache)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _cache = cache;
         }
 
+        public async Task<List<Flight>> GetAllFlightsAsync()
+        {
+            if (_cache.TryGetValue("allFlights", out List<Flight>? cachedFlights))
+            {
+                Console.WriteLine("Retrieved from cache");
+                return cachedFlights!;
+            }
+
+            Console.WriteLine("Download from database...");
+
+            List<Flight> flights = new();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var command = new SqlCommand("SELECT * FROM Flights", connection);
+                await connection.OpenAsync();
+                var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    flights.Add(new Flight
+                    {
+                        FlightNumber = (string)reader["FlightNumber"],
+                        DepartureAirportCity = (string)reader["DepartureAirportCity"],
+                        ArrivalAirportCity = (string)reader["ArrivalAirportCity"],
+                        DepartureDateTime = (DateTime)reader["DepartureDateTime"],
+                        DurationMinutes = (int)reader["DurationMinutes"]
+                    });
+                }
+            }
+
+
+            _cache.Set("allFlights", flights, TimeSpan.FromMinutes(5));
+
+            return flights;
+        }
         public async Task<Flight?> GetByNumberAsync(string flightNumber)
         {
             using var connection = new SqlConnection(_connectionString);

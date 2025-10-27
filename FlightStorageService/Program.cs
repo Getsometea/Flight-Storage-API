@@ -11,6 +11,7 @@ builder.Logging.AddDebug();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHostedService<FlightCleanupService>();
+builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
