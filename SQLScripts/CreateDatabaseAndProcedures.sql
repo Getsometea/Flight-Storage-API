@@ -10,7 +10,9 @@ CREATE TABLE FlightsDb.dbo.Flights (
 	DepartureAirportCity nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	ArrivalAirportCity nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	DurationMinutes int NOT NULL,
-	CONSTRAINT PK__Flights__2EAE6F51D1ABEF4A PRIMARY KEY (FlightNumber)
+	Id int IDENTITY(1,1) NOT NULL,
+	CONSTRAINT PK__Flights__2EAE6F51D1ABEF4A PRIMARY KEY (FlightNumber),
+	CONSTRAINT UQ_Flights_FlightNumber UNIQUE (FlightNumber)
 );
 GO
 
