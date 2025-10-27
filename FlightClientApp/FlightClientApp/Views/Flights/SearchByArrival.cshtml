@@ -1,0 +1,41 @@
+﻿@model List<FlightStorageService.Models.Flight>
+
+<h2>Search flights by arrival city</h2>
+
+<form method="get" asp-action="SearchByArrival">
+    <input type="text" name="city" placeholder="City of arrival" required class="form-control" />
+    <input type="date" name="date" required class="form-control mt-2" />
+    <button type="submit" class="btn btn-primary mt-2">Find</button>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <h3>Flights:</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Date and time</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model)
+            {
+                <tr>
+                    <td>@f.FlightNumber</td>
+                    <td>@f.DepartureAirportCity</td>
+                    <td>@f.ArrivalAirportCity</td>
+                    <td>@f.DepartureDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@f.DurationMinutes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (ViewBag.Error != null)
+{
+    <p class="text-danger">@ViewBag.Error</p>
+}

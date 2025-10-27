@@ -1,0 +1,42 @@
+﻿@model FlightStorageService.Models.Flight
+
+@{
+    ViewData["Title"] = "Search for a flight";
+}
+
+<h2>Search for a flight by number</h2>
+
+<form method="get" asp-action="SearchByNumber" class="mb-3">
+    <label for="flightNumber">Enter your flight number:</label>
+    <input type="text" id="flightNumber" name="flightNumber" class="form-control" required />
+    <button type="submit" class="btn btn-primary mt-2">Find</button>
+</form>
+
+@if (Model != null)
+{
+    <h3>Search results:</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Flight number</th>
+                <th>City of departure</th>
+                <th>City of arrival</th>
+                <th>Departure date and time</th>
+                <th>Duration (min)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.FlightNumber</td>
+                <td>@Model.DepartureAirportCity</td>
+                <td>@Model.ArrivalAirportCity</td>
+                <td>@Model.DepartureDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@Model.DurationMinutes</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Enter the flight number and click "Find."</p>
+}
